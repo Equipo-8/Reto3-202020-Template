@@ -49,7 +49,7 @@ def newAnalyzer():
                 }
 
     analyzer['accidents'] = lt.newList('SINGLE_LINKED', compareIds)
-    analyzer['severity'] = om.newMap(omaptype='RBT',
+    analyzer['severity'] = om.newMap(omaptype='BST',
                                       comparefunction=compareDates)
     return analyzer
 
