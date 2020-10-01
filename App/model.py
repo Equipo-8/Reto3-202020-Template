@@ -74,7 +74,7 @@ def updateDateIndex(map, accident):
     se crea y se actualiza el indice de tipos de crimenes
     """
     startTime = accident['Start_Time']
-    accidentdate = datetime.datetime.strptime(accidentdate, '%Y-%m-%d %H:%M:%S')
+    accidentdate = datetime.datetime.strptime(startTime, '%Y-%m-%d %H:%M:%S')
     entry = om.get(map, accidentdate.date())
     if entry is None:
         datentry = newDataEntry(accident)
@@ -114,10 +114,20 @@ def newSeverityEntry(severitygrp, accident):
     ofentry['lstseverity'] = lt.newList('SINGLELINKED', compareSeveritys)
     return ofentry
 
+def newDataEntry(accident):
+    """
+    Crea una entrada en el indice por fechas, es decir en el arbol
+    binario.
+    """
+    entry = {'severitytIndex': None, 'lstaccidents': None}
+    entry['severityIndex'] = m.newMap(numelements=30,
+                                     maptype='PROBING',
+                                     comparefunction=compareSeveritys)
+    entry['lstaccidents'] = lt.newList('SINGLE_LINKED', compareDates)
+    return entry
 
 
-
-def getCrimesByRange(analyzer, initialDate):
+def getAccidentsBySeverity(analyzer, initialDate):
     """
     Retorna el numero de crimenes en un rago de fechas.
     """
@@ -128,11 +138,11 @@ def getCrimesByRange(analyzer, initialDate):
         lstdate = it.next(lstiterator)
         totcrimes += lt.size(lstdate['lstaccidents'])
     accidentdate = om.get(analyzer['severity'], initialDate)
-    if crimedate['key'] is not None:
-        offensemap = me.getValue(crimedate)['offenseIndex']
-        numoffenses = m.get(offensemap, offensecode)
-        if numoffenses is not None:
-            return (m.size(me.getValue(numoffenses)['lstoffenses']),totcrimes)
+    if accidentdate['key'] is not None:
+        severitymap = me.getValue(accidentdate)['severityIndex']
+        numaccidents = m.get(severitymap)
+        if numaccidents is not None:
+            return (m.size(me.getValue(numaccidents)['lstaccidents']),totcrimes)
         return (0,totcrimes)
 
 
@@ -184,3 +194,37 @@ def compareSeveritys(severity1, severity2):
         return 1
     else:
         return -1
+
+def accidentsSize(analyzer):
+    """
+    Número de crimenes
+    """
+    return lt.size(analyzer['accidents'])
+
+
+def indexHeight(analyzer):
+    """
+    Altura del arbol
+    """
+    return om.height(analyzer['severity'])
+
+
+def indexSize(analyzer):
+    """
+    Numero de elementos en el indice
+    """
+    return om.size(analyzer['severity'])
+
+
+def minKey(analyzer):
+    """
+    Llave mas pequena
+    """
+    return om.minKey(analyzer['severity'])
+
+
+def maxKey(analyzer):
+    """
+    Llave mas grande
+    """
+    return om.maxKey(analyzer['severity'])

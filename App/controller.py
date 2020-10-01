@@ -62,6 +62,15 @@ def loadData(analyzer, accidentsfile):
         model.addAccident(analyzer, accident)
     return analyzer
 
+def getAccidentsBySeverity(analyzer, initialDate):
+    """
+    Retorna el total de crimenes en un rango de fechas
+    """
+    initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
+
+    return model.getAccidentsBySeverity(analyzer, initialDate.date())
+
+
 # ___________________________________________________
 #  Funciones para consultas
 # ___________________________________________________
@@ -69,7 +78,7 @@ def accidentsSize(analyzer):
     """
     Numero de crimenes leidos
     """
-    return model.crimesSize(analyzer)
+    return model.accidentsSize(analyzer)
 
 
 def indexHeight(analyzer):
@@ -100,21 +109,3 @@ def maxKey(analyzer):
     return model.maxKey(analyzer)
 
 
-def getAccidentsByRange(analyzer, initialDate):
-    """
-    Retorna el total de crimenes en un rango de fechas
-    """
-    initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
-    finalDate = datetime.datetime.strptime(finalDate, '%Y-%m-%d')
-    return model.getCrimesByRange(analyzer, initialDate.date(),
-                                  finalDate.date())
-
-
-def getCrimesByRangeCode(analyzer, initialDate):
-    """
-    Retorna el total de crimenes de un tipo especifico en una
-    fecha determinada
-    """
-    initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
-    return model.getCrimesByRangeCode(analyzer, initialDate.date(),
-                                      offensecode)
