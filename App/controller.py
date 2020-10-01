@@ -62,13 +62,13 @@ def loadData(analyzer, accidentsfile):
         model.addAccident(analyzer, accident)
     return analyzer
 
-def getAccidentsBySeverity(analyzer, initialDate):
+def getAccidentsBySeverity(analyzer, initialDate, finalDate):
     """
     Retorna el total de crimenes en un rango de fechas
     """
     initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
-
-    return model.getAccidentsBySeverity(analyzer, initialDate.date())
+    finalDate = datetime.datetime.strptime(finalDate, '%Y-%m-%d')
+    return model.getAccidentsBySeverity(analyzer, initialDate.date(),finalDate.date())
 
 
 # ___________________________________________________

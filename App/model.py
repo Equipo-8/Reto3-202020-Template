@@ -127,11 +127,11 @@ def newDataEntry(accident):
     return entry
 
 
-def getAccidentsBySeverity(analyzer, initialDate):
+def getAccidentsBySeverity(analyzer, initialDate, finalDate):
     """
     Retorna el numero de crimenes en un rago de fechas.
     """
-    lst = om.values(analyzer['severity'], initialDate)
+    lst = om.values(analyzer['severity'], initialDate,finalDate)
     lstiterator = it.newIterator(lst)
     totcrimes = 0
     while (it.hasNext(lstiterator)):

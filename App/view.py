@@ -80,7 +80,8 @@ while True:
     elif int(inputs[0]) == 3:
         print("\nBuscando crimenes en un rango de fechas: ")
         initialDate = input("Rango Inicial (YYYY-MM-DD): ")
-        total = controller.getAccidentsBySeverity(cont, initialDate)
+        finalDate=input("Rango final (YYYY-MM-DD):")
+        total = controller.getAccidentsBySeverity(cont, initialDate, finalDate)
         print("\nTotal de crimenes en el rango de fechas: " + str(total))
 
     elif int(inputs[0]) == 4:
