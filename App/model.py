@@ -140,10 +140,23 @@ def getAccidentsBySeverity(analyzer, initialDate, finalDate):
     accidentdate = om.get(analyzer['severity'], initialDate)
     if accidentdate['key'] is not None:
         severitymap = me.getValue(accidentdate)['severityIndex']
-        numaccidents = m.get(severitymap)
-        if numaccidents is not None:
-            return (m.size(me.getValue(numaccidents)['lstaccidents']),totcrimes)
-        return (0,totcrimes)
+        numaccidents3 = m.get(severitymap,'3')
+        numaccidents2 = m.get(severitymap,'2')
+        numaccidents1 = m.get(severitymap,'1')
+        dictretorno = {}
+        if numaccidents3 is not None:
+            dictretorno[3]=(m.size(me.getValue(numaccidents3)['lstseverity']),totcrimes)
+        else:
+            dictretorno[3]=(0,totcrimes)
+        if numaccidents2 is not None:
+            dictretorno[2]=(m.size(me.getValue(numaccidents2)['lstseverity']),totcrimes)
+        else:
+            dictretorno[2]=(0,totcrimes)
+        if numaccidents1 is not None:
+            dictretorno[1]=(m.size(me.getValue(numaccidents1)['lstseverity']),totcrimes)
+        else:
+            dictretorno[1]=(0,totcrimes)
+        return (dictretorno)
 
 
 
