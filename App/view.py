@@ -37,7 +37,7 @@ operación seleccionada.
 # ___________________________________________________
 
 
-crimefile = 'us_accidents_small.csv'
+crimefile = 'US_Accidents_Dec19.csv'
 
 # ___________________________________________________
 #  Menu principal
