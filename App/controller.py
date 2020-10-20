@@ -70,6 +70,9 @@ def getAccidentsBySeverity(analyzer, initialDate, finalDate):
     finalDate = datetime.datetime.strptime(finalDate, '%Y-%m-%d')
     return model.getAccidentsBySeverity(analyzer, initialDate.date(),finalDate.date())
 
+def getAccidentsByDate(analyzer,Date):
+    Date = datetime.datetime.strptime(Date, '%Y-%m-%d')
+    return (model.getAccidentsByDate(analyzer, Date.date()),model.Requerimiento_2(analyzer,Date.date()))
 
 # ___________________________________________________
 #  Funciones para consultas

@@ -37,7 +37,7 @@ operación seleccionada.
 # ___________________________________________________
 
 
-crimefile = 'us_accidents_small.csv'
+crimefile = 'us_accidents_dis_2016.csv'
 
 # ___________________________________________________
 #  Menu principal
@@ -81,12 +81,15 @@ while True:
         print("\nBuscando accidentes en un rango de fechas: ")
         initialDate = input("Fecha para buscar: ")
         total = controller.getAccidentsBySeverity(cont, initialDate, initialDate)
+        print("\nTotal de accidentes severidad 4 en la fecha: " + str(total[4]))
         print("\nTotal de accidentes severidad 3 en la fecha: " + str(total[3]))
         print("\nTotal de accidentes severidad 2 en la fecha: " + str(total[2]))
         print("\nTotal de accidentes severidad 1 en la fecha: " + str(total[1]))
 
     elif int(inputs[0]) == 4:
-        print("\nRequerimiento No 1 del reto 3: ")
+        Date= input('Ingrese la fecha : ')
+        print(controller.getAccidentsByDate(cont,Date))
+
 
     else:
         sys.exit(0)

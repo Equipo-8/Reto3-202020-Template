@@ -140,10 +140,15 @@ def getAccidentsBySeverity(analyzer, initialDate, finalDate):
     accidentdate = om.get(analyzer['severity'], initialDate)
     if accidentdate['key'] is not None:
         severitymap = me.getValue(accidentdate)['severityIndex']
+        numaccidents4 = m.get(severitymap,'4')
         numaccidents3 = m.get(severitymap,'3')
         numaccidents2 = m.get(severitymap,'2')
         numaccidents1 = m.get(severitymap,'1')
         dictretorno = {}
+        if numaccidents4 is not None:
+            dictretorno[4]=(m.size(me.getValue(numaccidents4)['lstseverity']),totcrimes)
+        else:
+            dictretorno[4]=(0,totcrimes)
         if numaccidents3 is not None:
             dictretorno[3]=(m.size(me.getValue(numaccidents3)['lstseverity']),totcrimes)
         else:
@@ -158,6 +163,39 @@ def getAccidentsBySeverity(analyzer, initialDate, finalDate):
             dictretorno[1]=(0,totcrimes)
         return (dictretorno)
 
+def getAccidentsByDate(analyzer,Date):
+    lst = om.values(analyzer['severity'], Date,Date)
+    lstiterator = it.newIterator(lst)
+    totcrimes = 0
+    while (it.hasNext(lstiterator)):
+        lstdate = it.next(lstiterator)
+        totcrimes += lt.size(lstdate['lstaccidents'])
+    return totcrimes
+
+
+
+def Requerimiento_2(analyzer,Date):
+    x= om.minKey(analyzer['severity'])
+    print(x)
+    lst = om.values(analyzer['severity'],x,Date)
+    list_fechas= []
+    for i in range(1,6):
+        x= lt.getElement(lst,i)
+        accidents= x['lstaccidents']
+        size= lt.size(accidents)
+        for k in range(1,size):
+            fecha= (lt.getElement(accidents,k))['Start_Time']
+            if fecha not in list_fechas :
+                list_fechas.append(fecha)
+    lstiterator = it.newIterator(lst)
+    totcrimes= 0
+    print(list_fechas)
+    print(len(list_fechas))
+    while (it.hasNext(lstiterator)):
+        lstdate = it.next(lstiterator)
+        totcrimes += lt.size(lstdate['lstaccidents'])
+    return totcrimes
+        
 
 
 
