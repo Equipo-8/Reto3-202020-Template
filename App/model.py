@@ -225,14 +225,18 @@ def getAccidentsByRange(analyzer, initialDate, endDate):
     sucedidos junto con la categoría más reportada
     """
     lst = om.values(analyzer['dateIndex'],initialDate, endDate) #Hacemos una lista con los valores
-    print(lst)
     lstiterator = it.newIterator(lst)
     totalaccidentes = 0
-    mostaccidentes = 9999
+    most= (0,None)
     while (it.hasNext(lstiterator)):
         lstdate = it.next(lstiterator)
-        totalaccidentes += lt.size(lstdate['lstaccident'])
-    return totalaccidentes
+        z= lt.size(lstdate['lstaccident'])
+        par= ((lt.getElement(lstdate['lstaccident'],1))['Start_Time']).split()
+        fecha= par[0]
+        if z > most[0] :
+            most= (z,fecha)            
+        totalaccidentes += z
+    return totalaccidentes, most
 
 def getAccidentsByRange2(analyzer, initialDate, endDate):
     """
