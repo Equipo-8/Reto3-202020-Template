@@ -37,7 +37,7 @@ operación seleccionada.
 # ___________________________________________________
 
 
-crimefile = 'us_accidents_dis_2016.csv'
+accidentsfile = 'us_accidents_dis_2016.csv'
 
 # ___________________________________________________
 #  Menu principal
@@ -52,6 +52,8 @@ def printMenu():
     print("2- Cargar información de accidentes")
     print("3- Requerimento 1")
     print("4- Requerimento 2")
+    print("5- Requerimiento 3")
+    print("6- Requerimiento 4")
     print("0- Salir")
     print("*******************************************")
 
@@ -70,27 +72,51 @@ while True:
 
     elif int(inputs[0]) == 2:
         print("\nCargando información de accidentes ....")
-        print("\nCargando información de accidentes ....")
-        controller.loadData(cont, crimefile)
-        print('accidentes cargados: ' + str(controller.accidentsSize(cont)))
+        controller.loadData(cont, accidentsfile)
+        print('Accidentes cargados: ' + str(controller.accidentsSize(cont)))
         print('Altura del arbol: ' + str(controller.indexHeight(cont)))
         print('Elementos en el arbol: ' + str(controller.indexSize(cont)))
         print('Menor Llave: ' + str(controller.minKey(cont)))
         print('Mayor Llave: ' + str(controller.maxKey(cont)))
+
     elif int(inputs[0]) == 3:
-        print("\nBuscando accidentes en un rango de fechas: ")
-        initialDate = input("Fecha para buscar: ")
-        total = controller.getAccidentsBySeverity(cont, initialDate, initialDate)
-        print("\nTotal de accidentes severidad 4 en la fecha: " + str(total[4]))
-        print("\nTotal de accidentes severidad 3 en la fecha: " + str(total[3]))
-        print("\nTotal de accidentes severidad 2 en la fecha: " + str(total[2]))
-        print("\nTotal de accidentes severidad 1 en la fecha: " + str(total[1]))
+        print("\nRequerimiento No 1 del reto 3: ")
+        print("\nBuscar por una fecha específica: ")
+        initialDate = input("Ingresa la Fecha (YYYY-MM-DD): ")
+        total4 = controller.getAccidentsBySeverity2(cont, initialDate, "4")
+        total3 = controller.getAccidentsBySeverity2(cont, initialDate, "3")
+        total2 = controller.getAccidentsBySeverity2(cont, initialDate, "2")
+        total1 = controller.getAccidentsBySeverity2(cont, initialDate, "1")
+        print("\nTotal de accidentes en la fecha: " + str(total4+total3+total2+total1))
+        print("\nTotal de accidentes de severidad 4: "+ str(total3))
+        print("\nTotal de accidentes de severidad 3: "+ str(total3))
+        print("\nTotal de accidentes de severidad 2: "+ str(total2))
+        print("\nTotal de accidentes de severidad 1: "+ str(total1))
 
     elif int(inputs[0]) == 4:
-        Date= input('Ingrese la fecha : ')
-        print(controller.getAccidentsByDate(cont,Date))
-
-
+        print("\nRequerimiento No 2 del reto 3: ")
+        print("\nBuscando accidentes de una fecha para atrás: ")
+        finalDate = input("Rango Final (YYYY-MM-DD): ")
+        total = controller.getAccidentsByRange(cont, str(controller.minKey(cont)), finalDate)
+        print("\nEl total de accidentes de esta fecha para atrás es "+str(total))
+    elif int(inputs[0]) == 5:
+        print("\nBuscando accidentes por severidad en la fecha: ")
+        initialDate = input("Ingresa la Fecha (YYYY-MM-DD): ")
+        finalDate = input("Rango Final (YYYY-MM-DD): ")
+        total4 = controller.getAccidentsBySeverity(cont, initialDate, finalDate, "4")
+        total3 = controller.getAccidentsBySeverity(cont, initialDate, finalDate, "3")
+        total2 = controller.getAccidentsBySeverity(cont, initialDate, finalDate, "2")
+        total1 = controller.getAccidentsBySeverity(cont, initialDate, finalDate, "1")
+        print("\nTotal de accidentes en la fecha: " + str(total4+total3+total2+total1))
+        print("\nTotal de accidentes de severidad 4: "+ str(total3))
+        print("\nTotal de accidentes de severidad 3: "+ str(total3))
+        print("\nTotal de accidentes de severidad 2: "+ str(total2))
+        print("\nTotal de accidentes de severidad 1: "+ str(total1))
+    elif int(inputs[0]) == 6:
+        print("\nRequerimiento No 4 del reto 3: ")
+        initialDate = input("Rango Inicial (YYYY-MM-DD): ")
+        finalDate = input("Rango Final (YYYY-MM-DD): ")
+        total = controller.getMostStateAccident(cont, initialDate, finalDate)
     else:
         sys.exit(0)
 sys.exit(0)

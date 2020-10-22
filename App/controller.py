@@ -56,23 +56,10 @@ def loadData(analyzer, accidentsfile):
     Carga los datos de los archivos CSV en el modelo
     """
     accidentsfile = cf.data_dir + accidentsfile
-    input_file = csv.DictReader(open(accidentsfile, encoding="utf-8"),
-                                delimiter=",")
+    input_file = csv.DictReader(open(accidentsfile,encoding="utf-8"),delimiter=",")
     for accident in input_file:
         model.addAccident(analyzer, accident)
     return analyzer
-
-def getAccidentsBySeverity(analyzer, initialDate, finalDate):
-    """
-    Retorna el total de crimenes en un rango de fechas
-    """
-    initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
-    finalDate = datetime.datetime.strptime(finalDate, '%Y-%m-%d')
-    return model.getAccidentsBySeverity(analyzer, initialDate.date(),finalDate.date())
-
-def getAccidentsByDate(analyzer,Date):
-    Date = datetime.datetime.strptime(Date, '%Y-%m-%d')
-    return (model.getAccidentsByDate(analyzer, Date.date()),model.Requerimiento_2(analyzer,Date.date()))
 
 # ___________________________________________________
 #  Funciones para consultas
@@ -112,3 +99,50 @@ def maxKey(analyzer):
     return model.maxKey(analyzer)
 
 
+def getAccidentsByDate(analyzer, initialDate):
+    """
+    Retorna el total de crimenes en un rango de fechas
+    """
+    initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
+    return model.getAccidentsByDate(analyzer, initialDate.date(),
+                                  )
+
+
+def getAccidentsBySeverity(analyzer, initialDate, finalDate, severity):
+    """
+    Retorna el total de crimenes de un tipo especifico en una
+    fecha determinada
+    """
+    initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
+    endDate = datetime.datetime.strptime(finalDate, '%Y-%m-%d')
+    return model.getAccidentsBySeverity(analyzer, initialDate.date(), endDate.date(), severity)
+
+
+def getAccidentsBySeverity2(analyzer, initialDate,
+                         severity):
+    """
+    Retorna el total de crimenes de un tipo especifico en una
+    fecha determinada
+    """
+    initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
+    return model.getAccidentsBySeverity2(analyzer, initialDate.date(),
+                                      severity)
+def getAccidentsByRange(analyzer, initialDate, endDate):
+    """
+    Retorna el total de crimenes de un tipo especifico en una
+    fecha determinada
+    """
+    initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
+    endDate = datetime.datetime.strptime(endDate, '%Y-%m-%d')
+    return model.getAccidentsByRange(analyzer, initialDate.date(),
+                                      endDate.date())
+
+def getMostStateAccident(analyzer, initialDate, endDate):
+    """
+    Retorna el total de crimenes de un tipo especifico en una
+    fecha determinada
+    """
+    initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
+    endDate = datetime.datetime.strptime(endDate, '%Y-%m-%d')
+    return model.getMostStateAccident(analyzer, initialDate.date(),
+                                      endDate.date())
