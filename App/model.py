@@ -264,17 +264,17 @@ def getAccidentsBySeverity2(analyzer, initialDate, severity):
 
 def getAccidentsByArea(analyzer, latitud, longitud, radio):
     central_point= (latitud**2 + longitud**2)**(1/2)
-    print(central_point)
     lst = om.valueSet(analyzer['dateIndex']) #Hacemos una lista con los valores
     lstiterator = it.newIterator(lst)
     totalaccidentes = 0
-    most= [0,None]
+    week= {}
     while (it.hasNext(lstiterator)):
         lstdate = it.next(lstiterator)
         par= ((lt.getElement(lstdate['lstaccident'],1))['Start_Time']).split()
         fecha= par[0]
         size= lt.size(lstdate['lstaccident'])  
         parcial= 0 
+        dia= findDay(fecha)
         for i in range(1,size):
             element= lt.getElement(lstdate['lstaccident'],i)
             latitude= float(element['Start_Lat'])     
@@ -283,11 +283,13 @@ def getAccidentsByArea(analyzer, latitud, longitud, radio):
                 parcial+= 1
             else:
                 parcial+= 0
-        if parcial >= most[0]:
-            most[0]= parcial
-            most[1]= fecha
+        if dia not in week:
+            week[dia]= 0
+            week[dia]+= parcial
+        else:
+            week[dia]+=parcial
         totalaccidentes+= parcial
-    return totalaccidentes, most
+    return totalaccidentes, week
 
 
 def inratio(latitude,lenght,rate,radio):
@@ -297,12 +299,9 @@ def inratio(latitude,lenght,rate,radio):
         return False
 
 
-
-def dayoftheweek(date):
-    frrr= datetime.datetime.strptime(date, '%d %m %Y')
-    part= frrr.date().weekday()
-    dia = calendar.day_name[part]
-    return dia
+def findDay(date): 
+	born = datetime.datetime.strptime(date, '%Y-%m-%d').weekday()
+	return (calendar.day_name[born]) 
 
 
 def getAccidentsByRange(analyzer, initialDate, endDate):
