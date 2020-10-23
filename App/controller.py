@@ -186,3 +186,6 @@ def aproxHour(datetoconvert):
         datetoconvert=datetoconvert.replace(minute=00)
     datetoconvert=datetoconvert.replace(second=0)
     return datetoconvert
+
+def getAccidentsByArea(analyzer, latitud, longitud, radio):
+    return model.getAccidentsByArea(analyzer,latitud,longitud,radio)
