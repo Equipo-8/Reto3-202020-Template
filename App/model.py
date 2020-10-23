@@ -127,7 +127,7 @@ def updateHourIndex(map, accident):
     """
     occurreddate = accident['Start_Time']
     accidentdate = datetime.datetime.strptime(occurreddate, '%Y-%m-%d %H:%M:%S')
-    accidentdate = aproxHour(accidentdate.time())
+    accidentdate = accidentdate.time()
     entry = om.get(map, accidentdate)
     if entry is None:
         datentry = newDataEntry(accident)
@@ -240,6 +240,7 @@ def getAccidentsBySeverity(analyzer, initialDate, finaldate, severity):
     """
     accidentes=0
     for x in daterange(initialDate,finaldate):
+        print(x)
         accidentdate = om.get(analyzer['dateIndex'], x)
         if accidentdate['key'] is not None:
             offensemap = me.getValue(accidentdate)['severityIndex']
@@ -383,15 +384,17 @@ def getAccidentsByHours2(analyzer, initialDate, endDate):
     lstiterator = it.newIterator(lst)
     totalaccidentes = 0
     most= (0,None)
+    conteo = {}
     while (it.hasNext(lstiterator)):
         lstdate = it.next(lstiterator)
         z= lt.size(lstdate['lstaccident'])
-        par= ((lt.getElement(lstdate['lstaccident'],1))['Start_Time']).split()
-        fecha= par[1]
-        if z > most[0] :
-            most= (z,fecha)            
+        par= ((lt.getElement(lstdate['lstaccident'],1))['Severity'])
+        if par in conteo:
+            conteo[par]+=z
+        else:
+            conteo[par]=z        
         totalaccidentes += z
-    return totalaccidentes, most
+    return totalaccidentes, conteo
 
 def getAccidentsByHours(analyzer, initialDate, finaldate, severity):
     """

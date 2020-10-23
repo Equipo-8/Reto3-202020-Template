@@ -171,6 +171,8 @@ def getAccidentsByHours2(analyzer, initialHour, endHour):
     endHour = datetime.datetime.strptime(endHour, "%Y-%m-%d %H:%M")
     initialHour = aproxHour(initialHour.time())
     endHour = aproxHour(endHour.time())
+    print(initialHour)
+    print(endHour)
     return model.getAccidentsByHours2(analyzer, initialHour,
                                       endHour)
 

@@ -132,7 +132,6 @@ while True:
         total2 = controller.getAccidentsByHours2(cont, initialDate, finalDate)
         #print(total)
         print(total2)
-        total = controller.getMostStateAccident(cont, initialDate, finalDate)
     elif int(inputs[0]) == 8:
         print("\nBONOOOO : ")
         latitud= float(input("Ingrese la latitud : "))
