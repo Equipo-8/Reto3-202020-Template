@@ -54,6 +54,7 @@ def printMenu():
     print("4- Requerimento 2")
     print("5- Requerimiento 3")
     print("6- Requerimiento 4")
+    print('7- Bono')
     print("0- Salir")
     print("*******************************************")
 
@@ -119,6 +120,13 @@ while True:
         initialDate = input("Rango Inicial (YYYY-MM-DD): ")
         finalDate = input("Rango Final (YYYY-MM-DD): ")
         total = controller.getMostStateAccident(cont, initialDate, finalDate)
+    elif int(inputs[0]) == 7:
+        print("\nBONOOOO : ")
+        latitud= float(input("Ingrese la latitud : "))
+        longitud= float(input("Ingrese la longitud : "))
+        radio= float(input("Ingrese el radio de busqueda : "))
+        total = controller.getAccidentsByArea(cont,latitud,longitud,radio)
+        print(total)
     else:
         sys.exit(0)
 sys.exit(0)

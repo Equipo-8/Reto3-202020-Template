@@ -27,6 +27,7 @@ from DISClib.DataStructures import mapentry as me
 from DISClib.ADT import map as m
 import datetime
 from datetime import timedelta, date
+import calendar
 assert config
 
 """
@@ -218,6 +219,49 @@ def getAccidentsBySeverity2(analyzer, initialDate, severity):
         if numoffenses is not None:
             return m.size(me.getValue(numoffenses)['lstseverities'])
         return 0
+
+def getAccidentsByArea(analyzer, latitud, longitud, radio):
+    central_point= (latitud**2 + longitud**2)**(1/2)
+    print(central_point)
+    lst = om.valueSet(analyzer['dateIndex']) #Hacemos una lista con los valores
+    lstiterator = it.newIterator(lst)
+    totalaccidentes = 0
+    most= [0,None]
+    while (it.hasNext(lstiterator)):
+        lstdate = it.next(lstiterator)
+        par= ((lt.getElement(lstdate['lstaccident'],1))['Start_Time']).split()
+        fecha= par[0]
+        size= lt.size(lstdate['lstaccident'])  
+        parcial= 0 
+        for i in range(1,size):
+            element= lt.getElement(lstdate['lstaccident'],i)
+            latitude= float(element['Start_Lat'])     
+            lenght= float(element['Start_Lng'])   
+            if inratio(latitude,lenght,central_point,radio):
+                parcial+= 1
+            else:
+                parcial+= 0
+        if parcial >= most[0]:
+            most[0]= parcial
+            most[1]= fecha
+        totalaccidentes+= parcial
+    return totalaccidentes, most
+
+
+def inratio(latitude,lenght,rate,radio):
+    if abs((latitude**2 + lenght**2)**(1/2) - rate) <= radio:
+        return True
+    else:
+        return False
+
+
+
+def dayoftheweek(date):
+    frrr= datetime.datetime.strptime(date, '%d %m %Y')
+    part= frrr.date().weekday()
+    dia = calendar.day_name[part]
+    return dia
+
 
 def getAccidentsByRange(analyzer, initialDate, endDate):
     """

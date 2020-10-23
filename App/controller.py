@@ -137,12 +137,6 @@ def getAccidentsByRange(analyzer, initialDate, endDate):
     return model.getAccidentsByRange(analyzer, initialDate.date(),
                                       endDate.date())
 
-def getMostStateAccident(analyzer, initialDate, endDate):
-    """
-    Retorna el total de crimenes de un tipo especifico en una
-    fecha determinada
-    """
-    initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
-    endDate = datetime.datetime.strptime(endDate, '%Y-%m-%d')
-    return model.getMostStateAccident(analyzer, initialDate.date(),
-                                      endDate.date())
+
+def getAccidentsByArea(analyzer, latitud, longitud, radio):
+    return model.getAccidentsByArea(analyzer,latitud,longitud,radio)
