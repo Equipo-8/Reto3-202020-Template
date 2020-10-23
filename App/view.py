@@ -120,7 +120,8 @@ while True:
         print("\nRequerimiento No 4 del reto 3: ")
         initialDate = input("Rango Inicial (YYYY-MM-DD): ")
         finalDate = input("Rango Final (YYYY-MM-DD): ")
-        total = controller.getMostStateAccident(cont, initialDate, finalDate, "4")
+        total = controller.getMostStateAccident(cont, initialDate, finalDate)
+        print(total)
     elif int(inputs[0]) == 7:
         print("\nRequerimiento No 5 del reto 3: ")
         initialDate = input("Hora Inicial (HH:MM): ")

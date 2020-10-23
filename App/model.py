@@ -262,6 +262,55 @@ def getAccidentsBySeverity2(analyzer, initialDate, severity):
             return m.size(me.getValue(numoffenses)['lstseverities'])
         return 0
 
+def getMostStateAccident(analyzer,initialDate,finaldate):
+    """
+    Para un rango de fechas retorna la cantidad de accidentes
+    sucedidos junto con la categoría más reportada
+    """
+    lst = om.values(analyzer['dateIndex'],initialDate, finaldate) #Hacemos una lista con los valores
+    lstiterator = it.newIterator(lst)
+    totalaccidentes = 0
+    most= (0,None)
+    dictstate= {}
+    while (it.hasNext(lstiterator)):
+        lstdate = it.next(lstiterator)
+        z= lt.size(lstdate['lstaccident'])
+        for i in range(0,z):
+            accident= lt.getElement(lstdate['lstaccident'],i)
+            state= accident['State']
+            if state not in dictstate.keys():
+                dictstate[state]= 0
+                dictstate[state]+=1
+            else:
+                dictstate[state]+=1
+
+        par= ((lt.getElement(lstdate['lstaccident'],1))['Start_Time']).split()
+        fecha= par[0]
+        if z > most[0] :
+            most= (z,fecha)            
+        totalaccidentes += z
+    state= estadotriste(dictstate)
+    return totalaccidentes, most,state
+
+def estadotriste(dictstate):
+    estadotriste= None
+    most= 0
+    counter= 0
+    for i in dictstate.keys():
+        if counter== 0 :
+            estadotriste= i
+            most= dictstate[i]
+            print('xd')
+        else:
+            if dictstate[i] > most: 
+                most= dictstate[i]
+                estadotriste= i
+                print('f en el chat')
+        counter+=1
+    return estadotriste
+
+
+###### FUNCIONES DEL BONOOOOO
 def getAccidentsByArea(analyzer, latitud, longitud, radio):
     central_point= (latitud**2 + longitud**2)**(1/2)
     lst = om.valueSet(analyzer['dateIndex']) #Hacemos una lista con los valores
@@ -302,7 +351,9 @@ def inratio(latitude,lenght,rate,radio):
 def findDay(date): 
 	born = datetime.datetime.strptime(date, '%Y-%m-%d').weekday()
 	return (calendar.day_name[born]) 
-
+###################
+###################
+#################
 
 def getAccidentsByRange(analyzer, initialDate, endDate):
     """

@@ -147,8 +147,7 @@ def getMostStateAccident(analyzer, initialDate, endDate):
     """
     initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
     endDate = datetime.datetime.strptime(endDate, '%Y-%m-%d')
-    return model.getMostStateAccident(analyzer, initialDate.date(),
-                                      endDate.date())
+    return model.getMostStateAccident(analyzer, initialDate.date(),endDate.date())
 
 def getAccidentsByHours(analyzer, initialHour, endHour, severity):
     """
