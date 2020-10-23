@@ -37,7 +37,7 @@ operación seleccionada.
 # ___________________________________________________
 
 
-accidentsfile = 'us_accidents_dis_2016.csv'
+accidentsfile = 'us_accidents_small.csv'
 
 # ___________________________________________________
 #  Menu principal
@@ -118,7 +118,17 @@ while True:
         print("\nRequerimiento No 4 del reto 3: ")
         initialDate = input("Rango Inicial (YYYY-MM-DD): ")
         finalDate = input("Rango Final (YYYY-MM-DD): ")
-        total = controller.getMostStateAccident(cont, initialDate, finalDate)
+        total = controller.getMostStateAccident(cont, initialDate, finalDate, "4")
+    elif int(inputs[0]) == 7:
+        print("\nRequerimiento No 5 del reto 3: ")
+        initialDate = input("Hora Inicial (HH:MM): ")
+        initialDate = str(controller.minKey(cont))+" "+initialDate
+        finalDate = input("Hora Final (HH:MM): ")
+        finalDate = str(controller.maxKey(cont))+" "+finalDate
+        #total = controller.getAccidentsByHours(cont, initialDate, finalDate,"4")
+        total2 = controller.getAccidentsByHours2(cont, initialDate, finalDate)
+        #print(total)
+        print(total2)
     else:
         sys.exit(0)
 sys.exit(0)

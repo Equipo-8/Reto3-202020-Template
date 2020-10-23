@@ -23,6 +23,7 @@
 import config as cf
 from App import model
 import datetime
+from datetime import timedelta, date
 import csv
 
 """
@@ -134,6 +135,8 @@ def getAccidentsByRange(analyzer, initialDate, endDate):
     """
     initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
     endDate = datetime.datetime.strptime(endDate, '%Y-%m-%d')
+    print(initialDate)
+    print(endDate)
     return model.getAccidentsByRange(analyzer, initialDate.date(),
                                       endDate.date())
 
@@ -146,3 +149,40 @@ def getMostStateAccident(analyzer, initialDate, endDate):
     endDate = datetime.datetime.strptime(endDate, '%Y-%m-%d')
     return model.getMostStateAccident(analyzer, initialDate.date(),
                                       endDate.date())
+
+def getAccidentsByHours(analyzer, initialHour, endHour, severity):
+    """
+    Retorna el porcentaje de los accidentes que ocurrieron respecto
+    a una hora en específico
+    """
+    initialHour = datetime.datetime.strptime(initialHour, "%Y-%m-%d %H:%M")
+    endHour = datetime.datetime.strptime(endHour, "%Y-%m-%d %H:%M")
+    initialHour = aproxHour(initialHour.time())
+    endHour = aproxHour(endHour.time())
+    return model.getAccidentsByHours(analyzer, initialHour,
+                                      endHour, severity)
+
+
+def getAccidentsByHours2(analyzer, initialHour, endHour):
+    """
+    Retorna el porcentaje de los accidentes que ocurrieron respecto
+    a una hora en específico
+    """
+    initialHour = datetime.datetime.strptime(initialHour, "%Y-%m-%d %H:%M")
+    endHour = datetime.datetime.strptime(endHour, "%Y-%m-%d %H:%M")
+    initialHour = aproxHour(initialHour.time())
+    endHour = aproxHour(endHour.time())
+    return model.getAccidentsByHours2(analyzer, initialHour,
+                                      endHour)
+
+
+def aproxHour(datetoconvert):
+    if 30 < datetoconvert.minute:
+        datetoconvert=datetoconvert.replace(minute=00)
+        datetoconvert = ((datetime.datetime.combine(datetime.date(1,1,1),datetoconvert) + timedelta(hours=1)).time())
+    elif 30> datetoconvert.minute >15:
+        datetoconvert=datetoconvert.replace(minute=30)
+    elif datetoconvert.minute < 15:
+        datetoconvert=datetoconvert.replace(minute=00)
+    datetoconvert=datetoconvert.replace(second=0)
+    return datetoconvert

@@ -40,6 +40,13 @@ def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):
         yield start_date + timedelta(n)
 
+def datespan(startDate, endDate, delta=timedelta(minutes=30)):
+    currentDate = startDate
+    while currentDate < endDate:
+        yield currentDate
+        currentDate = (datetime.datetime.combine(datetime.date(1,1,1),currentDate) + delta).time()
+
+
 
 
 # -----------------------------------------------------
@@ -56,12 +63,15 @@ def newAnalyzer():
     Retorna el analizador inicializado.
     """
     analyzer = {'accidents': None,
-                'dateIndex': None
+                'dateIndex': None, 
+                'hourIndex': None
                 }
 
     analyzer['accidents'] = lt.newList('SINGLE_LINKED', compareIds)
     analyzer['dateIndex'] = om.newMap(omaptype='RBT',
                                       comparefunction=compareDates)
+    analyzer['hourIndex'] = om.newMap(omaptype="RBT",
+                                      comparefunction=compareHours)
     return analyzer
 
 
@@ -71,6 +81,7 @@ def addAccident(analyzer, accident):
     """
     lt.addLast(analyzer['accidents'], accident)
     updateDateIndex(analyzer['dateIndex'], accident)
+    updateHourIndex(analyzer['hourIndex'], accident)
     return analyzer
 
 def updateDateIndex(map, accident):
@@ -93,6 +104,37 @@ def updateDateIndex(map, accident):
     addDateIndex(datentry, accident)
     return map
 
+def aproxHour(datetoconvert):
+    if 30 < datetoconvert.minute:
+        datetoconvert=datetoconvert.replace(minute=00)
+        datetoconvert = ((datetime.datetime.combine(datetime.date(1,1,1),datetoconvert) + timedelta(hours=1)).time())
+    elif 30> datetoconvert.minute >15:
+        datetoconvert=datetoconvert.replace(minute=30)
+    elif datetoconvert.minute < 15:
+        datetoconvert=datetoconvert.replace(minute=00)
+    datetoconvert=datetoconvert.replace(second=0)
+    return datetoconvert
+
+def updateHourIndex(map, accident):
+    """
+    Se toma la hora del accidente y se busca si ya existe en el arbol
+    dicha hora.  Si es asi, se adiciona a su lista de accidentes
+    y se actualiza el indice de severidad.
+
+    Si no se encuentra creado un nodo para esa hora en el arbol
+    se crea y se actualiza el indice de tipos de severidad
+    """
+    occurreddate = accident['Start_Time']
+    accidentdate = datetime.datetime.strptime(occurreddate, '%Y-%m-%d %H:%M:%S')
+    accidentdate = aproxHour(accidentdate.time())
+    entry = om.get(map, accidentdate)
+    if entry is None:
+        datentry = newDataEntry(accident)
+        om.put(map, accidentdate, datentry)
+    else:
+        datentry = me.getValue(entry)
+    addDateIndex(datentry, accident)
+    return map
 
 def addDateIndex(datentry, accident):
     """
@@ -238,24 +280,41 @@ def getAccidentsByRange(analyzer, initialDate, endDate):
         totalaccidentes += z
     return totalaccidentes, most
 
-def getAccidentsByRange2(analyzer, initialDate, endDate):
+def getAccidentsByHours2(analyzer, initialDate, endDate):
     """
     Para un rango de fechas retorna la cantidad de accidentes
     sucedidos junto con la categoría más reportada
     """
-    lst = om.values(analyzer['dateIndex'],initialDate, endDate) #Hacemos una lista con los valores
+    lst = om.values(analyzer['hourIndex'],initialDate, endDate) #Hacemos una lista con los valores
     lstiterator = it.newIterator(lst)
     totalaccidentes = 0
-    histograma={}
+    most= (0,None)
     while (it.hasNext(lstiterator)):
         lstdate = it.next(lstiterator)
-        lstiterator2 = it.newIterator(lstdate)
-        while (it.hasNext(lstiterator2)):
-            accident = it.next(lstiterator2)
-            print(accident)
-            break
-        totalaccidentes += lt.size(lstdate['lstaccident'])
-    return totalaccidentes
+        z= lt.size(lstdate['lstaccident'])
+        par= ((lt.getElement(lstdate['lstaccident'],1))['Start_Time']).split()
+        fecha= par[1]
+        if z > most[0] :
+            most= (z,fecha)            
+        totalaccidentes += z
+    return totalaccidentes, most
+
+def getAccidentsByHours(analyzer, initialDate, finaldate, severity):
+    """
+    Para una fecha determinada, retorna el numero de crimenes
+    de un tipo especifico.
+    """
+    accidentes=0
+    for x in datespan(initialDate,finaldate,delta=timedelta(minutes=30)):
+        accidentdate = om.get(analyzer['hourIndex'], x)
+        if accidentdate['key'] is not None:
+            offensemap = me.getValue(accidentdate)['severityIndex']
+            numoffenses = m.get(offensemap, severity)
+            if numoffenses is not None:
+                accidentes+= m.size(me.getValue(numoffenses)['lstseverities'])
+            accidentes+= 0
+    return accidentes
+
 
 
 # ==============================
@@ -286,6 +345,16 @@ def compareDates(date1, date2):
     else:
         return -1
 
+def compareHours(hour1, hour2):
+    """
+    Compara dos horas
+    """
+    if hour1 == hour2:
+        return 0
+    elif (hour1>hour2):
+        return 1
+    else:
+        return -1
 
 def compareOffenses(offense1, offense2):
     """
