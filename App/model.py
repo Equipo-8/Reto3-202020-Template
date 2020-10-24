@@ -240,7 +240,6 @@ def getAccidentsBySeverity(analyzer, initialDate, finaldate, severity):
     """
     accidentes=0
     for x in daterange(initialDate,finaldate):
-        print(x)
         accidentdate = om.get(analyzer['dateIndex'], x)
         if accidentdate['key'] is not None:
             offensemap = me.getValue(accidentdate)['severityIndex']
@@ -301,12 +300,10 @@ def estadotriste(dictstate):
         if counter== 0 :
             estadotriste= i
             most= dictstate[i]
-            print('xd')
         else:
             if dictstate[i] > most: 
                 most= dictstate[i]
-                estadotriste= i
-                print('f en el chat')
+                estadotriste= i    
         counter+=1
     return estadotriste
 
