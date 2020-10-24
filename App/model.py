@@ -382,7 +382,6 @@ def getAccidentsByHours2(analyzer, initialDate, endDate):
     lst = om.values(analyzer['hourIndex'],initialDate, endDate) #Hacemos una lista con los valores
     lstiterator = it.newIterator(lst)
     totalaccidentes = 0
-    most= (0,None)
     conteo = {}
     while (it.hasNext(lstiterator)):
         lstdate = it.next(lstiterator)
