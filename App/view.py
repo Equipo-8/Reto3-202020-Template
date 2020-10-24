@@ -104,7 +104,7 @@ while True:
         print("\nLa fecha con un mayor numero de accidentes en este rango de fecha es " + str(most[1] + " con un numero de accidentes igual a : " +str(most[0])))
         
     elif int(inputs[0]) == 5:
-        print("\nBuscando accidentes por severidad en la fecha: ")
+        print("\nBuscando accidentes por severidad en las fechas: ")
         initialDate = input("Ingresa la Fecha (YYYY-MM-DD): ")
         finalDate = input("Rango Final (YYYY-MM-DD): ")
         total4 = controller.getAccidentsBySeverity(cont, initialDate, finalDate, "4")
@@ -151,7 +151,7 @@ while True:
         longitud= float(input("Ingrese la longitud : "))
         radio= float(input("Ingrese el radio de busqueda : "))
         total = controller.getAccidentsByArea(cont,latitud,longitud,radio)
-        print("\nLos accidentes ocurrisos en el radio de busqueda fueron de: " + str(total[0]))
+        print("\nLos accidentes ocurridos en el radio de busqueda fueron de: " + str(total[0]))
         print("\nEl total de los accidentes ocurridos el lunes fueron de: " + str(total[1]["Monday"]))
         print("\nEl total de los accidentes ocurridos el Martes fueron de: " + str(total[1]["Tuesday"])) 
         print("\nEl total de los accidentes ocurridos el Miercoles fueron de: " + str(total[1]["Wednesday"]))

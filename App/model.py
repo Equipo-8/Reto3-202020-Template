@@ -241,12 +241,13 @@ def getAccidentsBySeverity(analyzer, initialDate, finaldate, severity):
     accidentes=0
     for x in daterange(initialDate,finaldate):
         accidentdate = om.get(analyzer['dateIndex'], x)
-        if accidentdate['key'] is not None:
-            offensemap = me.getValue(accidentdate)['severityIndex']
-            numoffenses = m.get(offensemap, severity)
-            if numoffenses is not None:
-                accidentes+= m.size(me.getValue(numoffenses)['lstseverities'])
-            accidentes+= 0
+        if accidentdate is not None :
+            if accidentdate['key'] is not None:
+                offensemap = me.getValue(accidentdate)['severityIndex']
+                numoffenses = m.get(offensemap, severity)
+                if numoffenses is not None:
+                    accidentes+= m.size(me.getValue(numoffenses)['lstseverities'])
+                accidentes+= 0
     return accidentes
     
 def getAccidentsBySeverity2(analyzer, initialDate, severity):
@@ -255,11 +256,13 @@ def getAccidentsBySeverity2(analyzer, initialDate, severity):
     de un tipo especifico.
     """
     accidentdate = om.get(analyzer['dateIndex'], initialDate)
-    if accidentdate['key'] is not None:
-        offensemap = me.getValue(accidentdate)['severityIndex']
-        numoffenses = m.get(offensemap, severity)
-        if numoffenses is not None:
-            return m.size(me.getValue(numoffenses)['lstseverities'])
+    if accidentdate is not None :
+        if accidentdate['key'] is not None:
+            offensemap = me.getValue(accidentdate)['severityIndex']
+            numoffenses = m.get(offensemap, severity)
+            if numoffenses is not None:
+                return m.size(me.getValue(numoffenses)['lstseverities'])
+    else:
         return 0
 
 def getMostStateAccident(analyzer,initialDate,finaldate):
@@ -310,7 +313,6 @@ def estadotriste(dictstate):
 
 ###### FUNCIONES DEL BONOOOOO
 def getAccidentsByArea(analyzer, latitud, longitud, radio):
-    central_point= (latitud**2 + longitud**2)**(1/2)
     lst = om.valueSet(analyzer['dateIndex']) #Hacemos una lista con los valores
     lstiterator = it.newIterator(lst)
     totalaccidentes = 0
@@ -326,7 +328,7 @@ def getAccidentsByArea(analyzer, latitud, longitud, radio):
             element= lt.getElement(lstdate['lstaccident'],i)
             latitude= float(element['Start_Lat'])     
             lenght= float(element['Start_Lng'])   
-            if inratio(latitude,lenght,central_point,radio):
+            if inratio(latitude,lenght,latitud,longitud,radio):
                 parcial+= 1
             else:
                 parcial+= 0
@@ -339,8 +341,8 @@ def getAccidentsByArea(analyzer, latitud, longitud, radio):
     return totalaccidentes, week
 
 
-def inratio(latitude,lenght,rate,radio):
-    if abs((latitude**2 + lenght**2)**(1/2) - rate) <= radio:
+def inratio(latitude,lenght,latitude2,lenght2,radio):
+    if ((latitude-latitude2)**2 + (lenght-lenght2)**2)**(1/2) <= radio:
         return True
     else:
         return False
